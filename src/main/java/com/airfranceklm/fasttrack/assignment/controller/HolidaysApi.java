@@ -2,6 +2,12 @@ package com.airfranceklm.fasttrack.assignment.controller;
 
 import com.airfranceklm.fasttrack.assignment.controller.dto.HolidayDto;
 import com.airfranceklm.fasttrack.assignment.services.HolidayService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,8 +38,21 @@ public class HolidaysApi {
         return new ResponseEntity<>(holidayService.getHolidays(), HttpStatus.OK);
     }
 
+    /**
+     * Get holidays based on holiday id.
+     * Only this endpoint where sample of API documentation is being shown for the sake of the assignment.
+     * @param holidayId Holiday id to be searched on
+     * @return {@link HolidayDto HolidayDto} object.
+     */
+    @Operation(summary = "Retrieve holiday by holiday id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All holidays",
+                    content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = HolidayDto.class))
+                    })
+    })
     @GetMapping(path = "/{holidayId}")
-    public ResponseEntity<HolidayDto> getHolidaysPerEmployee(@PathVariable(name = "holidayId") String holidayId) {
+    public ResponseEntity<HolidayDto> getHolidaysPerEmployee(@Parameter(description = "Id of the holiday") @PathVariable(name = "holidayId") String holidayId) {
         return new ResponseEntity<>(holidayService.getHolidayById(UUID.fromString(holidayId)), HttpStatus.OK);
     }
 

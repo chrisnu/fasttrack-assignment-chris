@@ -28,12 +28,19 @@ public class HolidayValidator implements Validator<Holiday> {
         isValid();
     }
 
+    /**
+     * Checks if the start and end date are valid (start date is before end date)
+     */
     void isValid() {
         if (holiday.getEndOfHoliday().isEqual(holiday.getStartOfHoliday()) || holiday.getEndOfHoliday().isBefore(holiday.getStartOfHoliday())) {
             throw new ValidationHolidayException("Start of holiday cannot be after end of holiday");
         }
     }
 
+    /**
+     * Check if the proposed add / edit within time constraint
+     * @param hoursInAdvance How many hours in advance can the holiday be requested
+     */
     void canPlannedInAdvance(long hoursInAdvance) {
         LocalDateTime now = LocalDateTime.now();
         if (holiday.getStartOfHoliday().isAfter(now) && holiday.getStartOfHoliday().isBefore(LocalDateTime.now().plusHours(hoursInAdvance))) {
@@ -41,6 +48,10 @@ public class HolidayValidator implements Validator<Holiday> {
         }
     }
 
+    /**
+     * Check if the proposed cancellation within time constraint
+     * @param hoursInAdvance How many hours in advance can the holiday be canceled
+     */
     void canCanceledInAdvance(long hoursInAdvance) {
         LocalDateTime now = LocalDateTime.now();
         if (holiday.getStartOfHoliday().isAfter(now) && holiday.getStartOfHoliday().isBefore(now.plusHours(hoursInAdvance))) {
@@ -48,6 +59,11 @@ public class HolidayValidator implements Validator<Holiday> {
         }
     }
 
+    /**
+     * Check if there is another holiday that overlap with the newly requested holiday
+     * @param minGapHours Minimum gap with other holiday in hours
+     * @param excludeSelf If set to true, don't take self holiday's start / end date into consideration when checking for overlapping holidays
+     */
     void hasGapWithOtherHolidays(long minGapHours, boolean excludeSelf) {
         LocalDateTime start = holiday.getStartOfHoliday().minusHours(minGapHours);
         LocalDateTime end = holiday.getEndOfHoliday().plusHours(minGapHours);

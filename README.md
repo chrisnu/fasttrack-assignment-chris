@@ -1,5 +1,27 @@
 # FastTrack Holidays assignment
 
+### Note from Chris:
+
+To run:
+
+```bash
+$ mvn clean install
+$ mvn spring-boot:run
+```
+
+and go to http://localhost:8080.
+
+The build files of the frontend app are dumped in the resource file so that examinator can directly check it.
+
+Known issues:
+
+- When it fails the business logic validation, it doesn't throw any error on frontend.
+- Error handling should have been done better (using @ExceptionHandler)
+- Unit tests coverage are on validation only. The controller and services tests are not yet implemented. 
+
+-------------------------
+
+
 ## Assignment context
 
 The FastTrack team has been requested to build a new application that allows crew to (re)schedule their holidays. A challenging task! The goal is to build a user friendly self-service application that takes into account applicable business rules (as defined in the labor agreement) and that makes the best possible (efficient) fit with the flight schedule and other crew's holidays. 
