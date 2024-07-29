@@ -1,5 +1,5 @@
 package com.airfranceklm.fasttrack.assignment.resources;
 
-public interface EntityClone<T> {
+public interface EntityCopy<T> {
     T copyValue(T copy);
 }

@@ -17,7 +17,8 @@ import java.util.UUID;
                 @Index(name = "idx_employee_id", columnList = "employee_id")
         }
 )
-public class Holiday implements EntityClone<Holiday> {
+public class Holiday implements EntityCopy<Holiday> {
+
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
