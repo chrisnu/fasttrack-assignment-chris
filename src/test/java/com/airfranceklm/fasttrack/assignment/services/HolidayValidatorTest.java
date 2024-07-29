@@ -106,12 +106,12 @@ class HolidayValidatorTest {
         holidayValidator.init(holiday);
         assertThrows(ValidationHolidayException.class, () -> {
             when(holidayRepository.overlappingHolidays(any(), any())).thenReturn(5);
-            holidayValidator.hasGapWithOtherHolidays(2 * 24);
+            holidayValidator.hasGapWithOtherHolidays(2 * 24, false);
         });
 
         assertDoesNotThrow(() -> {
             when(holidayRepository.overlappingHolidays(any(), any())).thenReturn(0);
-            holidayValidator.hasGapWithOtherHolidays(2 * 24);
+            holidayValidator.hasGapWithOtherHolidays(2 * 24, false);
         });
     }
 }

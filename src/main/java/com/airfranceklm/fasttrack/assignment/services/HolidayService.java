@@ -72,7 +72,7 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
         // 2. A holiday must be planned at least 5 working days before the start date.
         holidayValidator.init(holiday);
         holidayValidator.canPlannedInAdvance(5 * 24);
-        holidayValidator.hasGapWithOtherHolidays(3 * 24);
+        holidayValidator.hasGapWithOtherHolidays(3 * 24, false);
 
         holidayRepository.saveAndFlush(holiday);
         return convertToDto(holiday);
@@ -89,7 +89,7 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
         // 2. A holiday must be planned at least 5 working days before the start date.
         holidayValidator.init(existingEntity);
         holidayValidator.canPlannedInAdvance(5 * 24);
-        holidayValidator.hasGapWithOtherHolidays(3 * 24);
+        holidayValidator.hasGapWithOtherHolidays(3 * 24, true);
 
         existingEntity = holidayRepository.saveAndFlush(existingEntity.copyValue(holiday));
         return convertToDto(existingEntity);

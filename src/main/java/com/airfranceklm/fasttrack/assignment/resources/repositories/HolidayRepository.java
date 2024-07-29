@@ -16,4 +16,7 @@ public interface HolidayRepository extends JpaRepository<Holiday, UUID> {
     List<Holiday> findByEmployeeId(String employeeId);
     @Query("SELECT count(h) FROM Holiday h WHERE h.startOfHoliday <= ?2 AND h.endOfHoliday >= ?1")
     int overlappingHolidays(LocalDateTime start, LocalDateTime end);
+
+    @Query("SELECT count(h) FROM Holiday h WHERE h.startOfHoliday <= ?2 AND h.endOfHoliday >= ?1 AND h.id != ?3")
+    int overlappingHolidays(LocalDateTime start, LocalDateTime end, UUID exceptHolidayId);
 }

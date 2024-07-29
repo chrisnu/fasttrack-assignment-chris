@@ -48,11 +48,17 @@ public class HolidayValidator implements Validator<Holiday> {
         }
     }
 
-    void hasGapWithOtherHolidays(long minGapHours) {
+    void hasGapWithOtherHolidays(long minGapHours, boolean excludeSelf) {
         LocalDateTime start = holiday.getStartOfHoliday().minusHours(minGapHours);
         LocalDateTime end = holiday.getEndOfHoliday().plusHours(minGapHours);
 
-        int overlappingHolidays = holidayRepository.overlappingHolidays(start, end);
+        int overlappingHolidays;
+        if (excludeSelf) {
+            overlappingHolidays = holidayRepository.overlappingHolidays(start, end, holiday.getId());
+        } else {
+            overlappingHolidays = holidayRepository.overlappingHolidays(start, end);
+        }
+
         if (overlappingHolidays > 0) {
             throw new ValidationHolidayException("Overlapping with other holidays. Min gap between holidays is " + minGapHours + " hours");
         }
