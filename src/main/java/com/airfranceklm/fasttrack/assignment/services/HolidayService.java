@@ -21,12 +21,14 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
     private final HolidayRepository holidayRepository;
     private final EmployeeRepository employeeRepository;
     private final ModelMapper modelMapper;
+    private final HolidayValidator holidayValidator;
 
     @Autowired
-    public HolidayService(ModelMapper modelMapper, HolidayRepository holidayRepository, EmployeeRepository employeeRepository) {
+    public HolidayService(ModelMapper modelMapper, HolidayRepository holidayRepository, EmployeeRepository employeeRepository, HolidayValidator holidayValidator) {
         this.modelMapper = modelMapper;
         this.holidayRepository = holidayRepository;
         this.employeeRepository = employeeRepository;
+        this.holidayValidator = holidayValidator;
     }
 
     public List<HolidayDto> getHolidays() {
@@ -42,9 +44,14 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
     }
 
     public void deleteHolidayById(UUID holidayId) {
-        holidayRepository.findById(holidayId).orElseThrow(
+        Holiday existingEntity = holidayRepository.findById(holidayId).orElseThrow(
                 () -> new HolidayNotFoundException(holidayId.toString())
         );
+
+        // Validate: A holiday must be cancelled at least 5 working days before the start date.
+        holidayValidator.init(existingEntity);
+        holidayValidator.canCanceledInAdvance(5 * 24);
+        holidayRepository.deleteById(holidayId);
 
         holidayRepository.deleteById(holidayId);
     }
@@ -60,6 +67,13 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
     public HolidayDto addHoliday(HolidayDto holidayDto) {
         Holiday holiday = convertToEntity(holidayDto);
 
+        // Validate:
+        // 1. There should be a gap of at least 3 working days between holidays.
+        // 2. A holiday must be planned at least 5 working days before the start date.
+        holidayValidator.init(holiday);
+        holidayValidator.canPlannedInAdvance(5 * 24);
+        holidayValidator.hasGapWithOtherHolidays(3 * 24);
+
         holidayRepository.saveAndFlush(holiday);
         return convertToDto(holiday);
     }
@@ -69,6 +83,13 @@ public class HolidayService implements CrudService<Holiday, HolidayDto> {
                 () -> new HolidayNotFoundException(holidayId.toString())
         );
         Holiday holiday = convertToEntity(holidayDto);
+
+        // Validate:
+        // 1. There should be a gap of at least 3 working days between holidays.
+        // 2. A holiday must be planned at least 5 working days before the start date.
+        holidayValidator.init(existingEntity);
+        holidayValidator.canPlannedInAdvance(5 * 24);
+        holidayValidator.hasGapWithOtherHolidays(3 * 24);
 
         existingEntity = holidayRepository.saveAndFlush(existingEntity.copyValue(holiday));
         return convertToDto(existingEntity);
