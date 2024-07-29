@@ -28,7 +28,7 @@ public class Holiday implements EntityCopy<Holiday> {
     @Setter
     private String holidayLabel;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
