@@ -16,6 +16,8 @@ public class Employee implements EntityCopy<Employee> {
     @GeneratedValue(generator = "employee-id", strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "employee-id", strategy = "com.airfranceklm.fasttrack.assignment.resources.generators.EmployeeIdGenerator")
     private String id;
+
+    @Column(nullable = false)
     private String name;
 
     @Override

@@ -20,23 +20,25 @@ import java.util.UUID;
 public class Holiday implements EntityCopy<Holiday> {
 
     @Id
-    @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type="uuid-char")
     private UUID id;
 
-    @Setter
+    @Column(nullable = false)
     private String holidayLabel;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
+    @Column(nullable = false)
     private LocalDateTime startOfHoliday;
 
+    @Column(nullable = false)
     private LocalDateTime endOfHoliday;
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     private HolidayStatus status;
 
     @Override
