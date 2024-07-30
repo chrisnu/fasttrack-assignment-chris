@@ -15,6 +15,7 @@ The build files of the frontend app are dumped in the resource file so that exam
 
 Known issues:
 
+- Database versioning is not complete. Instead of using spring DDL, I usually use 3rd party library such as Flyway or Liquibase.
 - When it fails the business logic validation, it doesn't throw any error on frontend.
 - Error handling should have been done better (using @ExceptionHandler)
 - Unit tests coverage are on validation only. The controller and services tests are not yet implemented. 
